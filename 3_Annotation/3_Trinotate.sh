@@ -55,7 +55,6 @@ Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/Tr
 Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_swissprot_blastp ${PREFIX}_proteins_uniprot.blastp
 Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_pfam ${PREFIX}_pfam_HMMer.out
 Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_signalp ${PREFIX}_signalp/output.gff3
-Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_EggnogMapper <file>
 Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_tmhmmv2 ${PREFIX}_tmhmm.out
 Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_swissprot_blastx ${PREFIX}_cdna_uniprot.blastx
 
