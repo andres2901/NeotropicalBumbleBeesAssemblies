@@ -12,8 +12,9 @@
 #
 ########################################################################################
 
-PREFIX=$1 #prefix of files for annotation
-output_name=$2 #name for output
+assembly_file=$1 #path of assembly file
+gff_file=$2 #path of gff file
+PREFIX=$3 #prefix of files for annotation
 
 # ################## Module Loading Area ############################################
 
@@ -21,6 +22,12 @@ module load anaconda
 source activate trinotate
 
 ########################################################################################
+
+#generate cdna and protein file
+
+/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/util/Trinotate_GTF_or_GFF3_annot_prep.pl --annot $gff_file --genome_fa $assembly_file --out_prefix ${PREFIX}
+
+#run necessary tools for annotation
 
 blastx -query ${PREFIX}.transcripts.cdna.fa -db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/uniprot_sprot.pep -num_threads 8 -max_target_seqs 1 -outfmt 6 -evalue 1e-5 > ${PREFIX}_cdna_uniprot.blastx 2> ${PREFIX}_cdna_uniprot.blastx.err 
 
@@ -35,12 +42,25 @@ source activate signalp
 
 signalp6 --fastafile ${PREFIX}.proteins.fa --output_dir ${PREFIX}_signalp --organism eukarya
 
-/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/Trinotate /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite init --gene_trans_map ${PREFIX}_geneTranscriptMap.txt --transcript_fasta ${PREFIX}_cdna.fa --transdecoder_pep ${PREFIX}_ProteinsTrinotate.fa
-/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/Trinotate /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate/Trinotate.sqlite LOAD_swissprot_blastp ${PREFIX}_proteins_uniprot.blastp
-/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/Trinotate /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate/Trinotate.sqlite LOAD_swissprot_blastx ${PREFIX}_cdna_uniprot.blastx
-/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/Trinotate /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate/Trinotate.sqlite LOAD_pfam ${PREFIX}_pfam_HMMer.out
-/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/Trinotate /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate/Trinotate.sqlite LOAD_tmhmm ${PREFIX}_tmhmm.out
-/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/Trinotate /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate/Trinotate.sqlite report > ${PREFIX}_trinotateReport.txt
-/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/util/report_summary/trinotate_report_summary.pl ${PREFIX}_trinotateReport.txt ${PREFIX}_trinotateReport
+conda deactivate
+source activate trinotate
 
+#run eggnoggmapper
+
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --init --gene_trans_map ${PREFIX}_gene-to-trans-map --transcript_fasta ${PREFIX}.transcripts.cdna.fa --transdecoder_pep ${PREFIX}.proteins.fa
+
+#load results
+
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --CPU 8 --transcript_fasta ${PREFIX}.transcripts.cdna.fa --transdecoder_pep ${PREFIX}.proteins.fa --run "EggnogMapper"
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_swissprot_blastp ${PREFIX}_proteins_uniprot.blastp
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_pfam ${PREFIX}_pfam_HMMer.out
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_signalp ${PREFIX}_signalp/output.gff3
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_EggnogMapper <file>
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_tmhmmv2 ${PREFIX}_tmhmm.out
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --LOAD_swissprot_blastx ${PREFIX}_cdna_uniprot.blastx
+
+#generate reports
+
+Trinotate --db /hpcfs/home/ciencias_biologicas/af.lizcano/database/Trinotate2/TrinotateBoilerplate.sqlite --report > ${PREFIX}_trinotateReport.txt
+/hpcfs/home/ciencias_biologicas/af.lizcano/Trinotate-Trinotate-v4.0.2/util/report_summary/trinotate_report_summary.pl ${PREFIX}_trinotateReport.txt ${PREFIX}_trinotateReport
 ########################################################################################
