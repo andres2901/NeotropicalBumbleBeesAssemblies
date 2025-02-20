@@ -6,7 +6,7 @@
 #SBATCH -p medium			#Partition/queue in which to run the job.
 #SBATCH -N 1				#Number of nodes required.
 #SBATCH -n 1				#Parallel task.
-#SBATCH --mem=256	#Memory per CPU
+#SBATCH --mem=256G	#Memory per CPU
 #SBATCH --time=72:00:00			#Maximum run time	
 #SBATCH -o filtering.o%j			#Output file name
 #
