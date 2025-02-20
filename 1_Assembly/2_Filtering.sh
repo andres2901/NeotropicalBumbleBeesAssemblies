@@ -14,6 +14,7 @@
 
 file_path=$1 #path to the fastq file
 output_name=$2 #name for first output
+
 # ################## Module Loading Area ############################################
 
 module load anaconda
