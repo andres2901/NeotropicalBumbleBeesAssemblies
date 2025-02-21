@@ -3,11 +3,11 @@
 # ###### Parameters area for resource request to SLURM ############################
 #
 #SBATCH --job-name=Masking	#Job Name.
-#SBATCH -p medium			#Partition/queue in which to run the job.
+#SBATCH -p long			#Partition/queue in which to run the job.
 #SBATCH -N 1				#Number of nodes required.
 #SBATCH -n 1				#Parallel task.
 #SBATCH --mem=256G	#Memory per CPU
-#SBATCH --time=72:00:00			#Maximum run time	
+#SBATCH --time=360:00:00			#Maximum run time	
 #SBATCH -o masking.o%j			#Output file name
 #
 ########################################################################################
@@ -37,18 +37,24 @@ reasonaTE -mode annotate -projectFolder workspace -projectName $dir_name -tool t
 reasonaTE -mode annotate -projectFolder workspace -projectName $dir_name -tool transposonPSI
 reasonaTE -mode annotate -projectFolder workspace -projectName $dir_name -tool NCBICDD1000
 
+#run repeatMasker
+
 conda deactivate
 source activate repeatMasker
 
 /hpcfs/home/ciencias_biologicas/af.lizcano/RepeatMasker/RepeatMasker -species Hymenoptera -e abblast -dir workspace/${dir_name}/repMasker/ -pa 4 workspace/${dir_name}/sequence.fasta
 
+#run repeatModeler
+
 conda deactivate
 source activate repeatModeler
 
-/hpcfs/home/ciencias_biologicas/af.lizcano/RepeatModeler-2.0.5/BUildDatabase -name sequence_index $file_path
+/hpcfs/home/ciencias_biologicas/af.lizcano/RepeatModeler-2.0.5/BUildDatabase -name sequence_index workspace/${dir_name}/sequence.fasta
 mv sequence_index* workspace/${dir_name}/repeatmodel/
 
 /hpcfs/home/ciencias_biologicas/af.lizcano/RepeatModeler-2.0.5/RepeatModeler -database workspace/${dir_name}/repeatmodel/sequence_index -threads 8
+
+#run Must
 
 conda deactivate
 source activate must
