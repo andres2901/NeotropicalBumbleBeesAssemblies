@@ -15,7 +15,7 @@
 assembly_path=$1 #path to the assembly file
 output_name=$2 #name for output directory
 rnaseq_dir=$3 #path of the directory of rnaseq data
-species_name=$4 #name for the species in Braker
+species_name=$4 #name for the species in Braker and prefix for the IDs in the final gff3 file
 
 # ################## Module Loading Area ############################################
 
@@ -32,8 +32,9 @@ braker.pl --gff3 --threads 8 --workingdir=$output_name --genome=$assembly_path -
 conda deactivate
 source activate agat
 
-agat_sp_filter_incomplete_gene_coding_models.pl --gff ${output_name}/braker.gff3 --fasta $assembly_path -o temp_file.gff
-agat_sp_filter_by_ORF_size.pl --gff temp_file.gff -o ${species_name}.gff
+agat_sp_filter_incomplete_gene_coding_models.pl --gff ${output_name}/braker.gff3 --fasta $assembly_path -o temp_file1.gff #remove IDs with incomplete gene models
+agat_sp_filter_by_ORF_size.pl --gff temp_file1.gff -o temp_file2.gff #removes genes with ORF length <100 aa
+agat_sp_manage_IDs.pl --gff temp_file2.gff --prefix ${species_name}_ -o ${output_name}.gff #change the IDs of the final gff file
 
-rm temp_file.gff
+rm temp_file*
 ########################################################################################
