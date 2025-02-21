@@ -13,7 +13,7 @@
 ########################################################################################
 
 file_path=$1 #path to the assembly file
-output_name=$2 #name for first output
+output_name=$2 #name for output
 
 # ################## Module Loading Area ############################################
 
