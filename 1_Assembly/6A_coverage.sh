@@ -13,7 +13,7 @@
 ########################################################################################
 
 fastq_path=$1 #path to the fastq file
-assembly_path=$2 #name for first output
+assembly_path=$2 #path to the assembly file
 
 # ################## Module Loading Area ############################################
 
@@ -22,10 +22,10 @@ source activate minimap2
 
 ########################################################################################
 
-minimap2 -x map-ont -a --sam-hit-only --secondary=no -t 8 $assemblye_path $fastq_path > minimap_coverage.sam
+minimap2 -x map-ont -a --sam-hit-only --secondary=no -t 8 $assembly_path $fastq_path > minimap_coverage.sam
 
 conda deactivate
-module load samtools
+source activate samtools
 
 samtools sort -@16 -O BAM -o coverage_sorted.bam minimap_coverage.sam
 rm minimap_coverage*
