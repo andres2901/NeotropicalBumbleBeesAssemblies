@@ -9,6 +9,9 @@
 #SBATCH -o tree.o%j			#Output file name
 #
 ########################################################################################
+
+genes_path=$1 #path to the directory where multifasta of genes are stored
+
 # ################## Module Loading Area ############################################
 
 module load anaconda
@@ -17,9 +20,9 @@ source activate MAFFT
 ########################################################################################
 
 #Alignment
-ls genes* | | awk -F '.' '{print $1}' | while read line
+ls ${genes_path}/genes* | awk -F '.' '{print $1}' | while read line #the multifasta files should start whit "genes" and follow by the name of the gene
 do
-mafft --thread -1 --genafpair --maxiterate 1000 ${line}_final.fa > aligned_${line}.fa
+mafft --thread -1 --genafpair --maxiterate 1000 ${line}.fa > aligned_${line}.fa
 done
 
 #Trimmed alignment
