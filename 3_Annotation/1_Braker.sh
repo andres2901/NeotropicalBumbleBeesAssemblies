@@ -32,6 +32,8 @@ braker.pl --gff3 --threads 8 --workingdir=$output_name --genome=$assembly_path -
 conda deactivate
 source activate agat
 
-agat_sp_filter_incomplete_gene_coding_models.pl --gff ${output_name}/braker.gff3 --fasta $assembly_path -o infile
-agat_sp_filter_by_ORF_size.pl --gff infile.gff -o ${species_name}.gff
+agat_sp_filter_incomplete_gene_coding_models.pl --gff ${output_name}/braker.gff3 --fasta $assembly_path -o temp_file.gff
+agat_sp_filter_by_ORF_size.pl --gff temp_file.gff -o ${species_name}.gff
+
+rm temp_file.gff
 ########################################################################################
