@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # ###### Parameters area for resource request to SLURM ############################
 #
 #SBATCH --job-name=Finishing	#Job Name.
