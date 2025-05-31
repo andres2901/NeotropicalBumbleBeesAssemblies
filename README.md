@@ -76,7 +76,7 @@ Using the assemblies generated in the [first section](#1-Assembly), genome annot
 * 2_Trinotate.sh: Annotates the function of predicted genes.
 * 3_non-coding_annotation.sh: Annotates non-coding RNAs.
 
-Transposable element identification using LTR_Pred for `TransposonUltimate`pipeline was performed manually with the following command:
+Transposable element identification using LTR_Pred for `TransposonUltimate`pipeline was performed manually, prior to running the `0_masking.sh` script. The command used was:
 
 ```
 source activate udocker_prod #activate conda environment with LTR_Pred
@@ -91,3 +91,5 @@ quit()
 
 scp -r sequence_ltrpred <destination username@IP>:<path_to_directory>
 ```
+
+Some results, with contig names updated for NCBI submission, are stored in the `3_Annotation` folder.
