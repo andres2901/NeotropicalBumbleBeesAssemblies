@@ -2,7 +2,7 @@
 
 Bioinformatics analysis pipeline till annotation for:
 
->Lizcano-Salas et al. (2025). First genome assemblies of Neotropical *Thoracobombus* Bumble Bees *Bombus pauloensis* and *Bombus pullatus*. bioRxiv. https://doi.org/10.1101/2025.10.13.682240
+>Lizcano-Salas, A. F., Jacome-García, J. C., Riaño-Jiménez, D., & Guevara-Suarez, M. (2025). First genome assemblies of Neotropical Thoracobombus Bumblebees *Bombus pauloensis* and *Bombus pullatus*. *G3: Genes, Genomes, Genetics*. https://doi.org/10.1093/g3journal/jkaf305
 
 The workflow was written for and run on Universidad de los Andes HPC which uses SLURM worload manager. The bash scripts should be modified based on the specified system were want to be run and the name and path of each file.
 
